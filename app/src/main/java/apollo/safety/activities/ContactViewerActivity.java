@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,6 +37,7 @@ public class ContactViewerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_viewer);
+        //       Log.d("dipantan : ", String.valueOf(adapter.getItemCount()));
         contacts = new ArrayList<>();
         recyclerView = findViewById(R.id.recyclerView1);
         recyclerView.setBackgroundColor(Color.BLACK);
@@ -45,29 +45,40 @@ public class ContactViewerActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        contacts.clear();
-        adapter.notifyDataSetChanged();
-    }
-
-    @Override
     protected void onResume() {
+        //    contacts.clear();
         super.onResume();
         preferences = getSharedPreferences("apollo.safety.USERNAME", MODE_PRIVATE);
         String username = preferences.getString("Username", "");
-   //     Toast.makeText(this, username, Toast.LENGTH_SHORT).show();
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("contacts").child(username);
         databaseReference.keepSynced(true);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
+                    contacts.clear();
                     for (DataSnapshot contactsSnapshot : dataSnapshot.getChildren()) {
                         Contacts list = contactsSnapshot.getValue(Contacts.class);
                         if (list != null && list.getNumber() != null && list.getName() != null) {
                             contacts.add(list);
                         }
+                   /*     if (contacts.isEmpty()) {
+                            Toast.makeText(ContactViewerActivity.this, "Empty", Toast.LENGTH_SHORT).show();
+                            //      TextView textView = findViewById(R.id.relative);
+                            RelativeLayout relativeLayout = findViewById(R.id.relative);
+                            TextView textView = new TextView(ContactViewerActivity.this);
+                            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                                    ViewGroup.LayoutParams.WRAP_CONTENT);
+                            layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+                            textView.setLayoutParams(layoutParams);
+                            textView.setGravity(Gravity.CENTER);
+                            textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                            textView.setText("No items");
+                            textView.setTextColor(Color.WHITE);
+                            textView.setTextSize(18);
+                            relativeLayout.addView(textView);
+                        }  */
                     }
                     adapter = new ContactsAdapter(contacts, getApplicationContext(), new OnLongClick() {
                         @Override
@@ -76,9 +87,6 @@ public class ContactViewerActivity extends AppCompatActivity {
                             final String username = preferences.getString("Username", "");
                             final Contacts ld = contacts.get(position);
                             final String id = ld.getId();
-                            //           cardView.setOnLongClickListener(new View.OnLongClickListener() {
-                            //                   @Override
-                            //                    public boolean onLongClick(View v) {
                             final AlertDialog.Builder alertDialog = new AlertDialog.Builder(ContactViewerActivity.this);
                             alertDialog.setMessage("Are you sure to delete this contact");
                             alertDialog.setCancelable(false);
@@ -89,7 +97,21 @@ public class ContactViewerActivity extends AppCompatActivity {
                                     reference.removeValue();
                                     contacts.remove(position);
                                     adapter.notifyItemRemoved(position);
-
+                           /*         if (adapter.getItemCount() == 0) {
+                                        //      TextView textView = findViewById(R.id.relative);
+                                        RelativeLayout relativeLayout = findViewById(R.id.relative);
+                                        TextView textView = new TextView(ContactViewerActivity.this);
+                                        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                                                ViewGroup.LayoutParams.WRAP_CONTENT,
+                                                ViewGroup.LayoutParams.WRAP_CONTENT);
+                                        layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+                                        textView.setLayoutParams(layoutParams);
+                                        textView.setGravity(Gravity.CENTER);
+                                        textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                                        textView.setText("No items");
+                                        textView.setTextSize(18);
+                                        relativeLayout.addView(textView);
+                                    }   */
                                     Toast.makeText(ContactViewerActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
                                 }
                             });
@@ -101,21 +123,10 @@ public class ContactViewerActivity extends AppCompatActivity {
                             });
                             AlertDialog dialog = alertDialog.create();
                             dialog.show();
-                            //        return false;
-                            //         }
-                            //                 });
-
                         }
                     });
                     recyclerView.setAdapter(adapter);
-
-
                 }
-            /*    else {
-                    TextView textView = findViewById(R.id.textView);
-                    textView.setText(R.string.no_contacts);
-                    textView.setTextColor(Color.WHITE);
-                } */
             }
 
             @Override
@@ -123,38 +134,10 @@ public class ContactViewerActivity extends AppCompatActivity {
                 Toast.makeText(ContactViewerActivity.this, "Error", Toast.LENGTH_SHORT).show();
             }
         });
-        databaseReference.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                //  recreate();
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                //       ContactsAdapter adapter = new ContactsAdapter(contacts, ContactViewerActivity.this);
-                //      int position = adapter.
-                //        adapter.notifyDataSetChanged();
-                //  recreate();
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
     }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

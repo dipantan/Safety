@@ -40,6 +40,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         final View view = inflater.inflate(R.layout.list_contacts, parent, false);
         final ContactsViewHolder holder = new ContactsViewHolder(view);
+      //  holder.setIsRecyclable(false);
         view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {

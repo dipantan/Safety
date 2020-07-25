@@ -26,8 +26,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-
 import apollo.safety.R;
 import im.delight.android.location.SimpleLocation;
 
@@ -39,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     String latitude, longitude;
     DatabaseReference databaseReference;
     SharedPreferences sharedPreferences;
-//    ArrayList<String> numberList;
+    //    ArrayList<String> numberList;
     SmsManager smsManager;
     android.support.v7.widget.Toolbar toolbar;
 
@@ -51,14 +49,14 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitle("Safety");
         toolbar.setTitleTextColor(Color.WHITE);
-      //  toolbar.setLogo(R.mipmap.ic_launcher_foreground);
+        //  toolbar.setLogo(R.mipmap.ic_launcher_foreground);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         boolean gps_enabled = false;
         cardView = findViewById(R.id.cardView3);
         btnAddContacts = findViewById(R.id.btnAddContacts);
         btnViewContacts = findViewById(R.id.btnViewContacts);
         location = new SimpleLocation(MainActivity.this);
-    //    numberList = new ArrayList<>();
+        //    numberList = new ArrayList<>();
         latitude = String.valueOf(location.getLatitude());
         longitude = String.valueOf(location.getLongitude());
         sharedPreferences = getSharedPreferences("apollo.safety.USERNAME", MODE_PRIVATE);
@@ -126,32 +124,37 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     final String message = "I'm in danger. Here is my location ." + " http://maps.google.com/?q=" + latitude + "," + longitude;
                     smsManager = SmsManager.getDefault();
-                    databaseReference.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                String numbers = String.valueOf(dataSnapshot1.child("number").getValue());
-                                if (numbers != null) {
-                                //    numberList.add(numbers);
-                                    Log.d("Numbers:", numbers);
-                                    if(latitude.equals("0.0") && latitude.equals("0.0")){
-                                        Toast.makeText(MainActivity.this, "Location not fetched", Toast.LENGTH_SHORT).show();
-                                    //    Toast.makeText(MainActivity.this, "Please  ", Toast.LENGTH_SHORT).show();
-                                        return;
+                    try {
+                        databaseReference.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                    String numbers = String.valueOf(dataSnapshot1.child("number").getValue());
+                                    if (numbers != null) {
+                                        //    numberList.add(numbers);
+                                        Log.d("Numbers:", numbers);
+                                        if (latitude.equals("0.0") && latitude.equals("0.0")) {
+                                            Toast.makeText(MainActivity.this, "Location not fetched", Toast.LENGTH_SHORT).show();
+                                            //    Toast.makeText(MainActivity.this, "Please  ", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+                                        smsManager.sendTextMessage(numbers, null, message, null, null);
+                                        Toast.makeText(MainActivity.this, "Messages Sent", Toast.LENGTH_SHORT).show();
+                                    }else{
+                                        Toast.makeText(MainActivity.this, "Error occurred", Toast.LENGTH_SHORT).show();
                                     }
-                                    smsManager.sendTextMessage(numbers, null, message, null, null);
                                 }
                             }
-                            Toast.makeText(MainActivity.this, "Messages Sent", Toast.LENGTH_SHORT).show();
 
-                        }
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                            }
 
-                        }
-
-                    });
+                        });
+                    } catch (Exception e) {
+                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 }
             });    //cardView listener
         }
