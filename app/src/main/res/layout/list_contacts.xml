@@ -1,64 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:id="@+id/cardView"
+    android:layout_width="match_parent"
+    android:layout_height="63dp"
+    android:layout_marginEnd="5dp"
+    android:layout_marginStart="5dp"
+    android:layout_marginTop="5dp"
+    android:background="@drawable/ripple"
+    android:clickable="true"
+    android:elevation="25dp"
+    android:focusable="true">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/cardView"
-        android:layout_width="match_parent"
-        android:layout_height="63dp"
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="35dp"
+        android:text="Number"
+        android:textSize="16sp"
+        android:textStyle="italic" />
+
+    <TextView
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+        android:id="@+id/numContact"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="35dp"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/nameContact"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
         android:layout_marginTop="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
-        android:focusableInTouchMode="true"
-        android:forceDarkAllowed="false"
-        android:theme="@style/CardView.Light"
-        app:cardBackgroundColor="@color/colorAccent"
-        android:clickable="true"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:cardCornerRadius="8dp"
-        app:cardMaxElevation="5dp"
-        app:contentPaddingLeft="2dp"
-        app:contentPaddingRight="2dp"
-        android:focusable="true">
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+        android:textSize="16sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="35dp"
-            android:text="Number"
-            android:textSize="16sp"
-            android:textStyle="italic" />
-
-        <TextView
-            android:id="@+id/numContact"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="100dp"
-            android:layout_marginTop="35dp"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/nameContact"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="100dp"
-            android:layout_marginTop="5dp"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-            android:textSize="16sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="5dp"
-            android:text="Name"
-            android:textSize="16sp"
-            android:textStyle="italic" />
-
-    </android.support.v7.widget.CardView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="5dp"
+        android:text="Name"
+        android:textSize="16sp"
+        android:textStyle="italic" />
 
 </RelativeLayout>

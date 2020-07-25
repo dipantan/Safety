@@ -20,14 +20,17 @@ import java.util.List;
 
 import apollo.safety.Models.Contacts;
 import apollo.safety.R;
+import apollo.safety.Utils.OnLongClick;
 
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ContactsViewHolder> {
     private List<Contacts> contacts;
     private Context context;
+    private OnLongClick onLongClick;
 
-    public ContactsAdapter(List<Contacts> contacts, Context context) {
+    public ContactsAdapter(List<Contacts> contacts, Context context, OnLongClick onLongClick) {
         this.contacts = contacts;
         this.context = context;
+        this.onLongClick = onLongClick;
     }
 
 
@@ -35,17 +38,28 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
     @Override
     public ContactsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.list_contacts, parent, false);
-        return new ContactsViewHolder(view);
+        final View view = inflater.inflate(R.layout.list_contacts, parent, false);
+        final ContactsViewHolder holder = new ContactsViewHolder(view);
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                onLongClick.onLongClick(v, holder.getAdapterPosition());
+                return true;
+            }
+        });
+        return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull final ContactsViewHolder holder, final int position) {
+
         final Contacts ld = contacts.get(position);
-        holder.name.setText(ld.getName());
-        holder.number.setText(ld.getNumber());
-        final SharedPreferences preferences = context.getSharedPreferences("apollo.safety.USERNAME", Context.MODE_PRIVATE);
-        final String username = preferences.getString("Username","");
+        holder.name.setText(ld.getName());        //set name
+        holder.number.setText(ld.getNumber());   //set number
+
+
+  /*      final SharedPreferences preferences = context.getSharedPreferences("apollo.safety.USERNAME", Context.MODE_PRIVATE);
+        final String username = preferences.getString("Username", "");
         final String id = ld.getId();
         holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -71,8 +85,9 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
                 dialog.show();
                 return false;
             }
-        });
+        });      */
     }
+
 
     @Override
     public int getItemCount() {
@@ -81,13 +96,13 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
 
     static class ContactsViewHolder extends RecyclerView.ViewHolder {
         TextView name, number;
-        CardView cardView;
+     //   CardView cardView;
 
         ContactsViewHolder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.nameContact);
             number = itemView.findViewById(R.id.numContact);
-            cardView = itemView.findViewById(R.id.cardView);
+        //    cardView = itemView.findViewById(R.id.cardView);
         }
     }
 

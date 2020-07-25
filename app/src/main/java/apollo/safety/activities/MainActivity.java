@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitle("Safety");
         toolbar.setTitleTextColor(Color.WHITE);
-        toolbar.setLogo(R.mipmap.ic_launcher_foreground);
+      //  toolbar.setLogo(R.mipmap.ic_launcher_foreground);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         boolean gps_enabled = false;
         cardView = findViewById(R.id.cardView3);
@@ -134,6 +134,11 @@ public class MainActivity extends AppCompatActivity {
                                 if (numbers != null) {
                                 //    numberList.add(numbers);
                                     Log.d("Numbers:", numbers);
+                                    if(latitude.equals("0.0") && latitude.equals("0.0")){
+                                        Toast.makeText(MainActivity.this, "Location not fetched", Toast.LENGTH_SHORT).show();
+                                    //    Toast.makeText(MainActivity.this, "Please  ", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
                                     smsManager.sendTextMessage(numbers, null, message, null, null);
                                 }
                             }
